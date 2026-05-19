@@ -234,12 +234,15 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-const server = app.listen(PORT, () => {
+console.log('Starting server with PORT:', PORT);
+console.log('NODE_ENV:', NODE_ENV);
+
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log('\n');
   console.log('╔════════════════════════════════════════╗');
   console.log('║   🚀 Doc2HTML Backend Server Started   ║');
   console.log('╠════════════════════════════════════════╣');
-  console.log(`║  URL: http://localhost:${PORT}`);
+  console.log(`║  Listening on port: ${PORT}`);
   console.log(`║  Env: ${NODE_ENV}`);
   console.log('║  Endpoints:                            ║');
   console.log('║  • GET  /health                        ║');
