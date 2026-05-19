@@ -38,9 +38,13 @@ app.use((req, res, next) => {
 // CREATE UPLOADS DIRECTORY IF NOT EXISTS
 // ============================================
 const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-  console.log('✓ Created uploads directory');
+try {
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('✓ Created uploads directory');
+  }
+} catch (err) {
+  console.warn('⚠ Could not create uploads directory:', err.message);
 }
 
 // ============================================
