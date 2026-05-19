@@ -185,6 +185,22 @@ app.post('/convert/pptx', upload.single('file'), async (req, res) => {
 });
 
 // ============================================
+// ENDPOINT 1: Root Endpoint
+// GET /
+// ============================================
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Doc2HTML API Server',
+    version: '1.0.0',
+    endpoints: {
+      health: 'GET /health',
+      convert_docx: 'POST /convert/docx',
+      convert_pptx: 'POST /convert/pptx (coming soon)'
+    }
+  });
+});
+
+// ============================================
 // ENDPOINT 3: Health Check
 // GET /health
 // Used to verify server is running
