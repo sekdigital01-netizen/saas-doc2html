@@ -265,7 +265,7 @@ export default function Doc2HTML() {
 
             {/* File Info */}
             <div className="file-info">
-              <strong>Supported formats:</strong> .docx, .doc, .pptx (coming soon)
+              <strong>Supported formats:</strong> .docx, .doc, .pptx
               <br />
               <strong>Max size:</strong> 10MB
               <br />
