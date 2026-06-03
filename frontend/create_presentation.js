@@ -341,5 +341,5 @@ By Next Month: You'll be making money ✓`, {
   fontFace: "Arial", align: "center", valign: "middle", bold: true
 });
 
-prs.writeFile({ fileName: "/mnt/user-data/outputs/Doc2HTML_SaaS_Build_Guide.pptx" });
+prs.writeFile({ fileName: "test-presentation.pptx" });
 console.log("✅ PowerPoint created successfully!");
