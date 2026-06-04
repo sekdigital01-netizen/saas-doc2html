@@ -22,24 +22,28 @@ async function pptxToHtmlAsync(fileBuffer) {
 if (!isMainThread) {
   (async () => {
     try {
+      // Dynamic import is still needed for ESM package in CJS environment
       const { pptxToHtml } = await import('@jvmr/pptx-to-html');
       const dom = new JSDOM('<!DOCTYPE html><html><body><div id="container"></div></body></html>');
 
-      global.window = dom.window;
-      global.document = dom.window.document;
-      global.navigator = dom.window.navigator;
-      global.Node = dom.window.Node;
-      global.Element = dom.window.Element;
-      global.CharacterData = dom.window.CharacterData;
-      global.DOMParser = dom.window.DOMParser;
-      global.XMLSerializer = dom.window.XMLSerializer;
-      global.Image = dom.window.Image;
-      global.Blob = dom.window.Blob;
+      const { window } = dom;
+      global.window = window;
+      global.document = window.document;
+      global.navigator = window.navigator;
+      global.Node = window.Node;
+      global.Element = window.Element;
+      global.CharacterData = window.CharacterData;
+      global.DOMParser = window.DOMParser;
+      global.XMLSerializer = window.XMLSerializer;
+      global.Image = window.Image;
+      global.Blob = window.Blob;
 
       const htmlOutput = await pptxToHtml(workerData);
       parentPort.postMessage({ html: htmlOutput });
     } catch (err) {
       parentPort.postMessage({ error: err.message || String(err) });
+    } finally {
+      process.exit(0);
     }
   })();
 }

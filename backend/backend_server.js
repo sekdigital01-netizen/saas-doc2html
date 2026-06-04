@@ -49,7 +49,9 @@ const ensureUploadsDir = async () => {
     console.warn('⚠ Could not create uploads directory:', err.message);
   }
 };
-ensureUploadsDir();
+(async () => {
+  await ensureUploadsDir();
+})();
 
 // ============================================
 // CONFIGURE FILE UPLOAD STORAGE
