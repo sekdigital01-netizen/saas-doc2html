@@ -45,6 +45,28 @@
 
 ---
 
+## 🌟 Modern Industry Trends (2024-2025)
+
+### 🤖 AI-Ready Architecture
+Doc2HTML is built with an AI-first mindset. The modular architecture allows for easy integration of LLMs (like GPT-4o or Claude 3.5) for:
+- **Automated Image Alt-Text**: Using Vision APIs to describe images within documents.
+- **Semantic HTML Cleanup**: AI-driven structure optimization for better SEO.
+- **Content Summarization**: Optional TL;DR generation for long documents.
+
+### ♿ Accessibility (WCAG 2.2)
+We prioritize inclusivity. The generated HTML follows **WCAG 2.2** standards:
+- Semantic tags (`<article>`, `<section>`, `<nav>`) for screen readers.
+- Proper heading hierarchy (`<h1>` to `<h6>`).
+- High-contrast UI themes and keyboard-navigable interface.
+
+### 🔒 Security-First & Privacy
+In the age of data privacy, Doc2HTML implements a **Zero-Retention Policy**:
+- **In-Memory Processing**: Files are processed and results returned without persistent storage.
+- **Auto-Cleanup**: Temporary directories are wiped every 60 seconds.
+- **GDPR Ready**: No personal data is collected or tracked during conversion.
+
+---
+
 ## 🚀 Your Weekend Schedule
 
 ### Friday Evening (2 hours)

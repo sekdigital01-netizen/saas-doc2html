@@ -296,6 +296,21 @@ curl -X POST \
 
 ---
 
+## 🛡️ Modern QA Protocols (2024-2025)
+
+### ♿ Accessibility (a11y) Audits
+Don't just test functionality; test inclusivity.
+1. **Lighthouse/Axe**: Run automated accessibility scans. Aim for a score of 95+.
+2. **Screen Reader Testing**: Verify that all generated HTML tags are correctly read by NVDA or VoiceOver.
+3. **Keyboard Navigation**: Ensure all UI elements are reachable via `Tab` and interactive via `Enter/Space`.
+
+### 🔒 Security Vulnerability Scanning
+1. **Dependency Checks**: Run `npm audit` weekly to catch vulnerabilities in conversion libraries.
+2. **DAST (Dynamic Application Security Testing)**: Use tools like OWASP ZAP to test for XSS or Injection vulnerabilities in the file upload endpoint.
+3. **Zero-Retention Verification**: Audit logs to ensure no file content is persisted after the 60-second cleanup window.
+
+---
+
 ## 🎯 Success Criteria
 
 ✅ All tests pass when:
