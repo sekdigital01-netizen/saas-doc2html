@@ -1,7 +1,7 @@
 // ============================================
 // DOC2HTML SAAS - BACKEND
 // Purpose: Convert DOCX/PPTX files to HTML
-// Dependencies: express, multer, mammoth, cors, dotenv
+// Dependencies: express, multer, mammoth, cors, dotenv, @jvmr/pptx-to-html, jsdom
 // Run: npm install && npm start
 // ============================================
 
@@ -10,15 +10,16 @@ const multer = require('multer');
 const mammoth = require('mammoth');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
-require('dotenv').config(); // Load environment variables
+const fs = require('fs').promises;
+const { existsSync } = require('fs');
+const { pptxToHtmlAsync } = require('./converters/pptxConverter');
+require('dotenv').config();
 
 const app = express();
 
 // ============================================
 // MIDDLEWARE CONFIGURATION
 // ============================================
-// Enable CORS with specific options
 app.use(cors({
   origin: process.env.ALLOWED_ORIGINS || 'http://localhost:3000',
   methods: ['GET', 'POST'],
@@ -38,25 +39,28 @@ app.use((req, res, next) => {
 // CREATE UPLOADS DIRECTORY IF NOT EXISTS
 // ============================================
 const uploadsDir = path.join(__dirname, 'uploads');
-try {
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-    console.log('✓ Created uploads directory');
+const ensureUploadsDir = async () => {
+  try {
+    if (!existsSync(uploadsDir)) {
+      await fs.mkdir(uploadsDir, { recursive: true });
+      console.log('✓ Created uploads directory');
+    }
+  } catch (err) {
+    console.warn('⚠ Could not create uploads directory:', err.message);
   }
-} catch (err) {
-  console.warn('⚠ Could not create uploads directory:', err.message);
-}
+};
+(async () => {
+  await ensureUploadsDir();
+})();
 
 // ============================================
 // CONFIGURE FILE UPLOAD STORAGE
 // ============================================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Store files in uploads folder
     cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
-    // Generate unique filename with timestamp
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, uniqueSuffix + path.extname(file.originalname));
   }
@@ -66,7 +70,6 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
   fileFilter: (req, file, cb) => {
-    // Only allow DOCX, DOC, and PPTX files
     const allowedMimes = [
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'application/msword',
@@ -89,7 +92,6 @@ app.post('/convert/docx', upload.single('file'), async (req, res) => {
   let filePath = null;
   
   try {
-    // Validate file upload
     if (!req.file) {
       return res.status(400).json({ 
         error: 'No file uploaded',
@@ -97,16 +99,13 @@ app.post('/convert/docx', upload.single('file'), async (req, res) => {
       });
     }
 
-    console.log(`Processing file: ${req.file.originalname} (${req.file.size} bytes)`);
+    console.log(`Processing DOCX: ${req.file.originalname} (${req.file.size} bytes)`);
     filePath = req.file.path;
 
-    // Read the uploaded file buffer
-    const fileBuffer = fs.readFileSync(filePath);
-
-    // Convert DOCX to HTML using mammoth
+    const fileBuffer = await fs.readFile(filePath);
     const result = await mammoth.convertToHtml({ buffer: fileBuffer });
 
-    // Return successful conversion
+    console.log(`✓ Successfully converted DOCX: ${req.file.originalname}`);
     res.json({
       success: true,
       html: result.value,
@@ -114,10 +113,8 @@ app.post('/convert/docx', upload.single('file'), async (req, res) => {
       fileName: req.file.originalname
     });
 
-    console.log(`✓ Successfully converted: ${req.file.originalname}`);
-
   } catch (error) {
-    console.error('❌ Conversion error:', error.message);
+    console.error('❌ DOCX conversion error:', error.message);
     res.status(500).json({ 
       error: 'Conversion failed',
       details: error.message,
@@ -125,10 +122,9 @@ app.post('/convert/docx', upload.single('file'), async (req, res) => {
     });
 
   } finally {
-    // Clean up uploaded file (always, even on error)
     if (filePath) {
       try {
-        fs.unlinkSync(filePath);
+        await fs.unlink(filePath);
         console.log(`✓ Cleaned up temporary file: ${filePath}`);
       } catch (cleanupError) {
         console.error('⚠️  Warning: Could not delete temp file:', cleanupError.message);
@@ -138,9 +134,8 @@ app.post('/convert/docx', upload.single('file'), async (req, res) => {
 });
 
 // ============================================
-// ENDPOINT 2: Convert PPTX to HTML (MVP version)
+// ENDPOINT 2: Convert PPTX to HTML
 // POST /convert/pptx
-// Note: Full PPTX conversion requires additional libraries
 // ============================================
 app.post('/convert/pptx', upload.single('file'), async (req, res) => {
   let filePath = null;
@@ -153,15 +148,17 @@ app.post('/convert/pptx', upload.single('file'), async (req, res) => {
       });
     }
 
-    console.log(`PPTX request received: ${req.file.originalname}`);
+    console.log(`Processing PPTX: ${req.file.originalname} (${req.file.size} bytes)`);
     filePath = req.file.path;
 
-    // TODO: Implement full PPTX conversion with pptxjs library
-    // For MVP, return placeholder response
+    const fileBuffer = await fs.readFile(filePath);
+    const htmlOutput = await pptxToHtmlAsync(fileBuffer);
+
+    console.log(`✓ Successfully converted PPTX: ${req.file.originalname}`);
     res.json({
-      success: false,
-      message: 'PPTX conversion coming in v2',
-      html: '<div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;"><strong>Note:</strong> PowerPoint conversion is coming in the next version. Currently supporting .docx files only.</div>'
+      success: true,
+      html: htmlOutput,
+      fileName: req.file.originalname
     });
 
   } catch (error) {
@@ -173,10 +170,10 @@ app.post('/convert/pptx', upload.single('file'), async (req, res) => {
     });
 
   } finally {
-    // Clean up uploaded file
     if (filePath) {
       try {
-        fs.unlinkSync(filePath);
+        await fs.unlink(filePath);
+        console.log(`✓ Cleaned up temporary file: ${filePath}`);
       } catch (cleanupError) {
         console.error('⚠️  Warning: Could not delete PPTX temp file:', cleanupError.message);
       }
@@ -195,7 +192,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: 'GET /health',
       convert_docx: 'POST /convert/docx',
-      convert_pptx: 'POST /convert/pptx (coming soon)'
+      convert_pptx: 'POST /convert/pptx'
     }
   });
 });
@@ -203,7 +200,6 @@ app.get('/', (req, res) => {
 // ============================================
 // ENDPOINT 3: Health Check
 // GET /health
-// Used to verify server is running
 // ============================================
 app.get('/health', (req, res) => {
   res.json({ 
@@ -217,7 +213,6 @@ app.get('/health', (req, res) => {
 // ============================================
 // ERROR HANDLING MIDDLEWARE
 // ============================================
-// Handle 404 errors
 app.use((req, res) => {
   res.status(404).json({ 
     error: 'Endpoint not found',
@@ -226,11 +221,9 @@ app.use((req, res) => {
   });
 });
 
-// Global error handler
 app.use((error, req, res, next) => {
   console.error('❌ Global error:', error.message);
   
-  // Handle multer errors
   if (error.message && error.message.includes('Invalid file type')) {
     return res.status(400).json({ 
       error: error.message,
@@ -250,9 +243,6 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-console.log('Starting server with PORT:', PORT);
-console.log('NODE_ENV:', NODE_ENV);
-
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log('\n');
   console.log('╔════════════════════════════════════════╗');
@@ -263,12 +253,11 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log('║  Endpoints:                            ║');
   console.log('║  • GET  /health                        ║');
   console.log('║  • POST /convert/docx                  ║');
-  console.log('║  • POST /convert/pptx (coming soon)    ║');
+  console.log('║  • POST /convert/pptx                  ║');
   console.log('╚════════════════════════════════════════╝');
   console.log('\n');
 });
 
-// Error handling
 server.on('error', (err) => {
   console.error('Server error:', err);
   process.exit(1);
@@ -276,15 +265,12 @@ server.on('error', (err) => {
 
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled rejection:', err);
-  process.exit(1);
 });
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
-  process.exit(1);
 });
 
-// Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('\n📌 SIGTERM received, shutting down gracefully...');
   server.close(() => {

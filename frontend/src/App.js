@@ -25,7 +25,8 @@ export default function Doc2HTML() {
 
   // Configuration
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const MAX_FILE_SIZE = parseInt(process.env.REACT_APP_MAX_FILE_SIZE) || 10 * 1024 * 1024; // 10MB
+  const ENABLE_PPTX = process.env.REACT_APP_ENABLE_PPTX !== 'false';
   const ALLOWED_TYPES = ['.docx', '.doc', '.pptx'];
 
   /**
@@ -40,17 +41,23 @@ export default function Doc2HTML() {
     }
 
     // Check file extension
-    const fileName = selectedFile.name.toLowerCase();
-    const hasValidExtension = ALLOWED_TYPES.some(type => fileName.endsWith(type));
+    const name = selectedFile.name.toLowerCase();
+    const hasValidExtension = ALLOWED_TYPES.some(type => name.endsWith(type));
     
     if (!hasValidExtension) {
       setError(`Invalid file type. Allowed: ${ALLOWED_TYPES.join(', ')}`);
       return false;
     }
 
+    // Check if PPTX is enabled
+    if (name.endsWith('.pptx') && !ENABLE_PPTX) {
+      setError('PowerPoint conversion is currently disabled.');
+      return false;
+    }
+
     // Check file size
     if (selectedFile.size > MAX_FILE_SIZE) {
-      setError(`File size exceeds 10MB limit. Your file: ${(selectedFile.size / 1024 / 1024).toFixed(2)}MB`);
+      setError(`File size exceeds limit. Your file: ${(selectedFile.size / 1024 / 1024).toFixed(2)}MB`);
       return false;
     }
 
@@ -109,13 +116,11 @@ export default function Doc2HTML() {
   const handleConvert = async (e) => {
     e.preventDefault();
     
-    // Validate file exists
     if (!file) {
       setError('Please select a file first');
       return;
     }
 
-    // Reset state
     setLoading(true);
     setError('');
     setHtmlContent('');
@@ -124,15 +129,12 @@ export default function Doc2HTML() {
     try {
       console.log('📤 Uploading file:', file.name);
 
-      // Prepare form data
       const formData = new FormData();
       formData.append('file', file);
 
       // Determine endpoint based on file type
-      const endpoint = file.name.toLowerCase().endsWith('.docx') 
+      const endpoint = file.name.toLowerCase().endsWith('.docx') || file.name.toLowerCase().endsWith('.doc')
         ? '/convert/docx' 
-        : file.name.toLowerCase().endsWith('.doc')
-        ? '/convert/docx' // .doc also uses docx converter
         : '/convert/pptx';
 
       // Send conversion request
@@ -141,11 +143,10 @@ export default function Doc2HTML() {
         formData,
         { 
           headers: { 'Content-Type': 'multipart/form-data' },
-          timeout: 30000 // 30 second timeout
+          timeout: 60000 // 60 second timeout for PPTX
         }
       );
 
-      // Check if conversion was successful
       if (response.data.success && response.data.html) {
         setHtmlContent(response.data.html);
         setConversionStats({
@@ -153,17 +154,11 @@ export default function Doc2HTML() {
           warnings: response.data.warnings?.length || 0
         });
         console.log('✓ Conversion successful');
-
-        // Show warning if any
-        if (response.data.warnings && response.data.warnings.length > 0) {
-          console.warn('⚠️  Conversion warnings:', response.data.warnings);
-        }
       } else {
-        setError(response.data.message || 'Conversion returned no content');
+        setError(response.data.error || 'Conversion returned no content');
       }
 
     } catch (err) {
-      // Comprehensive error handling
       if (err.code === 'ECONNABORTED') {
         setError('Request timeout - server took too long to respond');
       } else if (err.response?.status === 400) {
@@ -171,7 +166,7 @@ export default function Doc2HTML() {
       } else if (err.response?.status === 500) {
         setError('Server error during conversion. Please try again.');
       } else if (err.message === 'Network Error') {
-        setError('Cannot reach server. Is the backend running on http://localhost:5000?');
+        setError(`Cannot reach server at ${API_URL}. Is the backend running?`);
       } else {
         setError(err.response?.data?.error || err.message || 'Upload failed. Please try again.');
       }
@@ -187,15 +182,12 @@ export default function Doc2HTML() {
    */
   const downloadHTML = () => {
     try {
-      // Create blob from HTML content
       const element = document.createElement('a');
       const htmlBlob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(htmlBlob);
       
-      // Generate filename
       const downloadName = fileName.replace(/\.[^/.]+$/, '') + '.html';
       
-      // Trigger download
       element.setAttribute('href', url);
       element.setAttribute('download', downloadName);
       element.style.display = 'none';
@@ -223,25 +215,18 @@ export default function Doc2HTML() {
     console.log('↻ Form reset');
   };
 
-  // ============================================
-  // RENDER
-  // ============================================
   return (
     <div className="doc2html-container">
-      {/* Header Section */}
       <div className="header">
         <h1>📄 Doc2HTML Converter</h1>
         <p>Convert Word & PowerPoint files to HTML in seconds</p>
       </div>
 
-      {/* Main Content */}
       <div className="content">
-        {/* Left: Upload Section */}
         <div className="upload-section">
           <div className="upload-box">
             <h2>Step 1: Upload Your File</h2>
             
-            {/* File Input with Drag & Drop */}
             <div 
               className="file-input-wrapper"
               onDragOver={handleDragOver}
@@ -263,22 +248,17 @@ export default function Doc2HTML() {
               </label>
             </div>
 
-            {/* File Info */}
             <div className="file-info">
-              <strong>Supported formats:</strong> .docx, .doc, .pptx (coming soon)
+              <strong>Supported formats:</strong> .docx, .doc, .pptx
               <br />
-              <strong>Max size:</strong> 10MB
-              <br />
-              <strong>Processing:</strong> Client + Server (secure)
+              <strong>Max size:</strong> {(MAX_FILE_SIZE / 1024 / 1024).toFixed(0)}MB
             </div>
 
-            {/* Convert Button */}
             <div className="button-group">
               <button 
                 onClick={handleConvert}
                 disabled={!file || loading}
                 className={`convert-btn ${loading ? 'loading' : ''}`}
-                title={!file ? 'Select a file first' : 'Convert file to HTML'}
               >
                 {loading ? '⏳ Converting...' : '✨ Convert to HTML'}
               </button>
@@ -288,14 +268,12 @@ export default function Doc2HTML() {
                   onClick={handleReset}
                   disabled={loading}
                   className="reset-btn"
-                  title="Clear selection and start over"
                 >
                   ↻ Reset
                 </button>
               )}
             </div>
 
-            {/* Pricing Info */}
             <div className="pricing-info">
               <div className="tier free">
                 <h4>🎁 FREE</h4>
@@ -313,23 +291,14 @@ export default function Doc2HTML() {
           </div>
         </div>
 
-        {/* Right: Preview Section */}
         <div className="preview-section">
-          {/* Error Message */}
           {error && (
             <div className="error-message">
               <span>❌ {error}</span>
-              <button 
-                className="close-error"
-                onClick={() => setError('')}
-                title="Dismiss error"
-              >
-                ×
-              </button>
+              <button className="close-error" onClick={() => setError('')}>×</button>
             </div>
           )}
 
-          {/* Preview & Download */}
           {htmlContent && (
             <div className="preview-container">
               <div className="preview-header">
@@ -342,16 +311,11 @@ export default function Doc2HTML() {
                     </p>
                   )}
                 </div>
-                <button 
-                  onClick={downloadHTML} 
-                  className="download-btn"
-                  title="Download as HTML file"
-                >
+                <button onClick={downloadHTML} className="download-btn">
                   ⬇️ Download HTML
                 </button>
               </div>
               
-              {/* HTML Preview */}
               <div className="html-preview">
                 <div 
                   dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -361,18 +325,15 @@ export default function Doc2HTML() {
             </div>
           )}
 
-          {/* Empty State */}
           {!htmlContent && !error && (
             <div className="empty-state">
               <div className="empty-icon">📄</div>
               <p>Upload and convert a file to see preview here</p>
-              <small>Your conversion will appear on this side</small>
             </div>
           )}
         </div>
       </div>
 
-      {/* Footer */}
       <div className="footer">
         <p>🔒 Secure • ⚡ Fast • 🆓 Free • No signup required</p>
         <small>Backend: {API_URL}</small>
