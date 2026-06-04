@@ -9,7 +9,7 @@
 
 ## 📊 Project Overview
 
-Doc2HTML is a **full-stack SaaS application** that converts Word and PowerPoint documents to HTML. This project includes a production-ready backend, professional frontend UI, and comprehensive testing infrastructure.
+Doc2HTML is a **privacy-first, AI-integrated SaaS platform** designed for the modern web. It enables seamless conversion of Word and PowerPoint documents into semantic, accessible HTML, aligning with 2024-2025 industry standards for performance, inclusivity, and data security.
 
 ### What Was Built
 
@@ -114,6 +114,12 @@ Saas/
 ```
 
 ---
+
+## 🛡️ Privacy & Security (Zero-Retention)
+In alignment with global privacy regulations (GDPR/CCPA), Doc2HTML implements a strict **Zero-Retention Policy**. Files are processed entirely in ephemeral storage, and all trace of user data is purged automatically within 60 seconds of processing. This "Security by Design" approach ensures enterprise-grade data handling for all users.
+
+## 🤖 AI-Ready Architecture
+The platform is built to integrate with modern LLMs. Future updates will support automated image captioning (alt-text) and semantic content structure optimization, making converted documents instantly ready for high-performance SEO and accessibility screen readers.
 
 ## ✨ Key Improvements Made
 

@@ -228,6 +228,12 @@ git push origin main
 # https://doc2html-xyz.railway.app
 ```
 
+### 🌍 Global Edge Deployment (2024-2025 Trend)
+To ensure the fastest possible conversion for global users, consider deploying the frontend and conversion logic to the **Edge**.
+- **Vercel Edge Functions**: Move file validation and simple conversions to the edge to reduce Cold Start times.
+- **Cloudflare Workers**: Use Workers for high-speed file routing and caching of converted static assets.
+- **CDN Strategy**: Always serve the frontend via a global CDN (already included with Vercel/Netlify) to minimize TTFB (Time to First Byte).
+
 ### Deploy Frontend (Vercel)
 ```bash
 # 1. Update .env with production backend URL
