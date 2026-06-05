@@ -11,6 +11,7 @@ const mammoth = require('mammoth');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const { Worker } = require('worker_threads');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
@@ -70,7 +71,8 @@ const upload = multer({
     const allowedMimes = [
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'application/msword',
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/octet-stream' // Sometimes seen for these types
     ];
     
     if (allowedMimes.includes(file.mimetype)) {
@@ -153,33 +155,68 @@ app.post('/convert/pptx', upload.single('file'), async (req, res) => {
       });
     }
 
-    console.log(`PPTX request received: ${req.file.originalname}`);
+    console.log(`Processing PPTX file: ${req.file.originalname}`);
     filePath = req.file.path;
 
-    // TODO: Implement full PPTX conversion with pptxjs library
-    // For MVP, return placeholder response
-    res.json({
-      success: false,
-      message: 'PPTX conversion coming in v2',
-      html: '<div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;"><strong>Note:</strong> PowerPoint conversion is coming in the next version. Currently supporting .docx files only.</div>'
+    // Run PPTX conversion in a worker thread to isolate JSDOM and avoid polluting global scope
+    const worker = new Worker(path.join(__dirname, 'converters', 'pptxWorker.js'), {
+      workerData: { filePath }
+    });
+
+    worker.on('message', (result) => {
+      if (result.success) {
+        res.json({
+          success: true,
+          html: result.html,
+          fileName: req.file.originalname
+        });
+        console.log(`✓ Successfully converted PPTX: ${req.file.originalname}`);
+      } else {
+        console.error('❌ PPTX conversion error:', result.error);
+        res.status(500).json({
+          error: 'PPTX conversion failed',
+          details: result.error,
+          success: false
+        });
+      }
+
+      // Cleanup after worker finishes
+      if (filePath && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    });
+
+    worker.on('error', (error) => {
+      console.error('❌ Worker error:', error.message);
+      if (!res.headersSent) {
+        res.status(500).json({
+          error: 'Worker error',
+          details: error.message,
+          success: false
+        });
+      }
+      if (filePath && fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    });
+
+    worker.on('exit', (code) => {
+      if (code !== 0) {
+        console.error(`Worker stopped with exit code ${code}`);
+      }
     });
 
   } catch (error) {
-    console.error('❌ PPTX conversion error:', error.message);
-    res.status(500).json({ 
-      error: 'PPTX conversion failed',
-      details: error.message,
-      success: false
-    });
-
-  } finally {
-    // Clean up uploaded file
-    if (filePath) {
-      try {
-        fs.unlinkSync(filePath);
-      } catch (cleanupError) {
-        console.error('⚠️  Warning: Could not delete PPTX temp file:', cleanupError.message);
-      }
+    console.error('❌ PPTX conversion request error:', error.message);
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'PPTX conversion request failed',
+        details: error.message,
+        success: false
+      });
+    }
+    if (filePath && fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
     }
   }
 });
@@ -195,7 +232,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: 'GET /health',
       convert_docx: 'POST /convert/docx',
-      convert_pptx: 'POST /convert/pptx (coming soon)'
+      convert_pptx: 'POST /convert/pptx'
     }
   });
 });
@@ -263,7 +300,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log('║  Endpoints:                            ║');
   console.log('║  • GET  /health                        ║');
   console.log('║  • POST /convert/docx                  ║');
-  console.log('║  • POST /convert/pptx (coming soon)    ║');
+  console.log('║  • POST /convert/pptx                  ║');
   console.log('╚════════════════════════════════════════╝');
   console.log('\n');
 });

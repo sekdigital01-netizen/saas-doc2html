@@ -442,6 +442,18 @@ body {
   color: var(--text-primary);
 }
 
+.slide-separator {
+  margin: 40px 0;
+  border: 0;
+  border-top: 2px dashed var(--border);
+}
+
+.preview-content .slide {
+  box-shadow: var(--shadow-md);
+  margin: 20px auto;
+  border: 1px solid var(--border);
+}
+
 .preview-content * {
   max-width: 100%;
 }
