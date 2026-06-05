@@ -112,24 +112,26 @@ Expected: 400 Error - "No file uploaded"
    - Convert button enabled
 ```
 
-#### Test 4: File Conversion ⏳ (Pending)
+#### Test 4: File Conversion & AI-Ready Check ⏳ (Pending)
 ```
 1. File selected
 2. Click "✨ Convert to HTML"
 3. Expected:
    - Loading state shows
    - HTML preview appears in right panel
+   - AI-Ready check: Verify semantic tags (article, section, h1-h6) are used
    - No errors displayed
    - Download button visible
 ```
 
-#### Test 5: HTML Download ⏳ (Pending)
+#### Test 5: HTML Download & Accessibility Verification ⏳ (Pending)
 ```
 1. After conversion, click "⬇️ Download HTML"
 2. Expected:
    - File downloads to computer
    - Filename: {original_name}.html
    - File is valid HTML (can open in browser)
+   - WCAG 2.2 Check: Use an accessibility validator (like Axe) to verify compliance
 ```
 
 #### Test 6: Error Handling ⏳ (Pending)

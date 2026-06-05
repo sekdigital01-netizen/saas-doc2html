@@ -71,10 +71,15 @@ npm install axios
 2. Copy the `Doc2HTML.jsx` file into `src/App.js`
 3. Copy the `Doc2HTML.css` file into `src/App.css`
 
-### Step 3: Create .env file
+### Step 3: Create .env file (Edge Deployment Ready)
 In `doc2html-frontend` folder, create `.env`:
 ```
+# Local development URL
 REACT_APP_API_URL=http://localhost:5000
+
+# Edge Deployment Variables
+REACT_APP_ENABLE_PPTX=false
+REACT_APP_MAX_FILE_SIZE=10485760
 ```
 
 ### Step 4: Run Frontend
@@ -205,12 +210,12 @@ npm install pptxjs
 
 ---
 
-## BUSINESS TIPS
+## BUSINESS TIPS (Modern Trends)
 
 ### Pricing Strategy
-- **Free**: 5 conversions/day, watermark
-- **Pro**: $4.99/month, unlimited, no watermark
-- **Team**: $19.99/month, API access, priority support
+- **Free**: 5 conversions/day, Semantic AI-Ready Preview
+- **Pro**: $4.99/month, Unlimited WCAG 2.2 Downloads
+- **AI-As-A-Service**: $29.99/month, High-volume API, RAG-optimized output
 
 ### Marketing (Get First 100 Users)
 1. Post on Product Hunt
