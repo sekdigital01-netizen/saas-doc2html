@@ -38,19 +38,40 @@ Your friends with PDF converters and video downloaders use these exact tactics:
 
 ---
 
-## PRICING COMPARISON (Make $$ Like Others)
+## PRICING COMPARISON (Modern SaaS Models)
 
-| Product | Price | Revenue/Users |
-|---------|-------|---|
-| PDF Converter | $3.99/mo | $100-400/mo |
-| Video Downloader | $5.99/mo | $200-600/mo |
-| Doc to HTML (YOU) | $4.99/mo | $150-500/mo |
+| Product | Price | Revenue/Users | Trend |
+|---------|-------|---|---|
+| PDF Converter | $3.99/mo | $100-400/mo | Legacy |
+| Video Downloader | $5.99/mo | $200-600/mo | Legacy |
+| **Doc2HTML (YOU)** | **$4.99/mo** | **$150-500/mo** | **AI & Privacy Focused** |
 
-**Why Doc2HTML can be MORE profitable:**
-1. Less infrastructure cost (smaller files)
-2. Faster processing (no encoding)
-3. B2B appeal (businesses use it for internal portals)
-4. Less competition right now
+**Why Doc2HTML is Positioned for 2024+:**
+1. **AI-Ready Output**: Developers pay a premium for HTML optimized for LLM training and RAG.
+2. **Zero-Retention Privacy**: Essential for GDPR/CCPA-conscious enterprise clients.
+3. **WCAG 2.2 Compliance**: Businesses need accessible content to avoid legal risks.
+4. **API-as-a-Service**: High-margin usage-based pricing for automated workflows.
+
+---
+
+## MODERN MONETIZATION STRATEGY
+
+### 1. Usage-Based Credit System (New Trend)
+Instead of just monthly tiers, offer credits:
+- **Free**: 5 credits/day (non-cumulative)
+- **Pay-as-you-go**: $10 for 100 credits (no expiration)
+- **Pro**: $4.99/mo for 500 credits + $0.02 per extra credit
+
+### 2. AI-as-a-Service Tier ($29/month)
+Specifically for AI engineers:
+- Guaranteed semantic tags for better LLM ingestion
+- API access with high rate limits
+- Metadata extraction (authors, dates, keywords)
+
+### 3. Enterprise "Privacy First" License
+- On-premise Docker deployment
+- Custom Zero-Retention verification
+- Dedicated support for WCAG compliance auditing
 
 ---
 
@@ -59,14 +80,14 @@ Your friends with PDF converters and video downloaders use these exact tactics:
 ### What's FREE:
 ```
 - Upload file
-- See HTML preview
+- See HTML preview (Semantic & AI-Ready)
 - Copy code manually
 - 5 conversions per day (rolling)
 ```
 
 ### What's PRO ($4.99/month):
 ```
-- Download as .html file (BUTTON)
+- Download as .html file (Clean, WCAG 2.2 Compliant)
 - Download CSS separately
 - Download as ZIP (html + styles)
 - Batch conversion (10 files at once)

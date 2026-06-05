@@ -210,34 +210,39 @@ npm start
 
 ---
 
-## 📦 Deployment
+## 📦 Modern Deployment Strategies
 
-### Deploy Backend (Railway)
+### 🌍 Edge Deployment (Vercel & Cloudflare)
+For global low-latency, deploy the frontend and backend as Edge Functions.
+- **Vercel**: Deploy the `frontend` and `backend` using Vercel Edge Middleware and Edge Functions.
+- **Cloudflare**: Use Cloudflare Workers for the backend to process documents at the edge.
+
+### 🛡️ Privacy & Compliance (GDPR/CCPA)
+- **Zero-Retention**: The backend is pre-configured to process files in-memory. Ensure your hosting provider does not log file contents.
+- **Region Locking**: Deploy to specific regions (e.g., EU-West) to comply with data residency requirements.
+
+### Deploy Backend (Railway / Render / Edge)
 ```bash
 # 1. Push to GitHub
 git init
 git add .
-git commit -m "Initial commit"
+git commit -m "Initial commit - Modern SaaS Release"
 git push origin main
 
-# 2. Go to railway.app
+# 2. Go to railway.app or render.com
 # 3. Connect GitHub repo
-# 4. Deploy
-
-# Backend will get URL like:
-# https://doc2html-xyz.railway.app
+# 4. Set Environment Variables (e.g., NODE_ENV=production)
+# 5. Deploy
 ```
 
-### Deploy Frontend (Vercel)
+### Deploy Frontend (Vercel / Netlify)
 ```bash
 # 1. Update .env with production backend URL
 REACT_APP_API_URL=https://doc2html-xyz.railway.app
 
-# 2. Deploy
-vercel deploy
-
-# Frontend will get URL like:
-# https://doc2html-frontend.vercel.app
+# 2. Connect Repo to Vercel
+# 3. Configure Edge Functions for the API route if applicable.
+# 4. Deploy
 ```
 
 ---
