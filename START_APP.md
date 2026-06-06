@@ -1,6 +1,6 @@
-# 🚀 Starting the Doc2HTML App
+# 🚀 Starting the Doc2HTML AI-Ready SaaS
 
-## Quick Start (3 Steps)
+## Quick Start (3 Steps to 2025 Modernization)
 
 ### Step 1: Open Terminal 1 - Start Backend
 ```bash
@@ -198,7 +198,8 @@ REACT_APP_ENABLE_PPTX=false
 
 ## Features
 
-✅ **Convert DOCX to HTML**
+✅ **Convert DOCX to AI-Ready HTML**
+- Semantic output optimized for RAG
 - Real-time preview
 - Download as file
 - Error handling
