@@ -146,20 +146,32 @@ export default function Doc2HTML() {
       );
 
       // Check if conversion was successful
-      if (response.data.success && response.data.html) {
-        setHtmlContent(response.data.html);
-        setConversionStats({
-          fileName: response.data.fileName,
-          warnings: response.data.warnings?.length || 0
-        });
-        console.log('✓ Conversion successful');
+      if (response.data.success) {
+        let html = '';
+        if (response.data.html) {
+          html = response.data.html;
+        } else if (response.data.slides && Array.isArray(response.data.slides)) {
+          // Join slides with a separator for preview
+          html = response.data.slides.join('<hr style="margin: 40px 0; border: 0; border-top: 2px dashed #eee;" />');
+        }
 
-        // Show warning if any
-        if (response.data.warnings && response.data.warnings.length > 0) {
-          console.warn('⚠️  Conversion warnings:', response.data.warnings);
+        if (html) {
+          setHtmlContent(html);
+          setConversionStats({
+            fileName: response.data.fileName,
+            warnings: response.data.warnings?.length || 0
+          });
+          console.log('✓ Conversion successful');
+
+          // Show warning if any
+          if (response.data.warnings && response.data.warnings.length > 0) {
+            console.warn('⚠️  Conversion warnings:', response.data.warnings);
+          }
+        } else {
+          setError('Conversion returned no content');
         }
       } else {
-        setError(response.data.message || 'Conversion returned no content');
+        setError(response.data.message || 'Conversion failed');
       }
 
     } catch (err) {
