@@ -11,6 +11,8 @@ const mammoth = require('mammoth');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const fsPromises = require('fs').promises;
+const { Worker } = require('worker_threads');
 require('dotenv').config(); // Load environment variables
 
 const app = express();
@@ -70,7 +72,8 @@ const upload = multer({
     const allowedMimes = [
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'application/msword',
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'application/octet-stream' // Sometimes returned by clients for .docx/.pptx
     ];
     
     if (allowedMimes.includes(file.mimetype)) {
@@ -100,8 +103,8 @@ app.post('/convert/docx', upload.single('file'), async (req, res) => {
     console.log(`Processing file: ${req.file.originalname} (${req.file.size} bytes)`);
     filePath = req.file.path;
 
-    // Read the uploaded file buffer
-    const fileBuffer = fs.readFileSync(filePath);
+    // Read the uploaded file buffer using fsPromises
+    const fileBuffer = await fsPromises.readFile(filePath);
 
     // Convert DOCX to HTML using mammoth
     const result = await mammoth.convertToHtml({ buffer: fileBuffer });
@@ -128,7 +131,7 @@ app.post('/convert/docx', upload.single('file'), async (req, res) => {
     // Clean up uploaded file (always, even on error)
     if (filePath) {
       try {
-        fs.unlinkSync(filePath);
+        await fsPromises.unlink(filePath);
         console.log(`✓ Cleaned up temporary file: ${filePath}`);
       } catch (cleanupError) {
         console.error('⚠️  Warning: Could not delete temp file:', cleanupError.message);
@@ -156,13 +159,31 @@ app.post('/convert/pptx', upload.single('file'), async (req, res) => {
     console.log(`PPTX request received: ${req.file.originalname}`);
     filePath = req.file.path;
 
-    // TODO: Implement full PPTX conversion with pptxjs library
-    // For MVP, return placeholder response
-    res.json({
-      success: false,
-      message: 'PPTX conversion coming in v2',
-      html: '<div style="padding: 20px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;"><strong>Note:</strong> PowerPoint conversion is coming in the next version. Currently supporting .docx files only.</div>'
+    // Read the uploaded file buffer
+    const fileBuffer = await fsPromises.readFile(filePath);
+
+    // Offload conversion to worker thread to avoid blocking event loop
+    const result = await new Promise((resolve, reject) => {
+      const worker = new Worker(path.join(__dirname, 'converters', 'pptxWorker.js'), {
+        workerData: { buffer: fileBuffer }
+      });
+      worker.on('message', resolve);
+      worker.on('error', reject);
+      worker.on('exit', (code) => {
+        if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
+      });
     });
+
+    if (result.success) {
+      res.json({
+        success: true,
+        slides: result.slidesHtml, // Array of HTML strings per slide
+        fileName: req.file.originalname
+      });
+      console.log(`✓ Successfully converted PPTX: ${req.file.originalname}`);
+    } else {
+      throw new Error(result.error);
+    }
 
   } catch (error) {
     console.error('❌ PPTX conversion error:', error.message);
@@ -176,7 +197,7 @@ app.post('/convert/pptx', upload.single('file'), async (req, res) => {
     // Clean up uploaded file
     if (filePath) {
       try {
-        fs.unlinkSync(filePath);
+        await fsPromises.unlink(filePath);
       } catch (cleanupError) {
         console.error('⚠️  Warning: Could not delete PPTX temp file:', cleanupError.message);
       }
