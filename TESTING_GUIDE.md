@@ -160,6 +160,22 @@ Expected:
    - Upload form ready again
 ```
 
+#### Test 9: WCAG 2.2 Accessibility Audit ⏳ (Pending)
+```
+1. Use Lighthouse or axe-core extension
+2. Verify all elements have proper ARIA labels
+3. Check color contrast ratios
+4. Ensure keyboard navigation works for all interactive elements
+```
+
+#### Test 10: AI-Ready HTML Validation ⏳ (Pending)
+```
+1. Convert a document with complex headers and lists
+2. Verify output uses semantic tags (<article>, <section>, <nav>)
+3. Ensure heading hierarchy is preserved (h1 -> h2 -> h3)
+4. Verify lack of inline styles that might confuse LLM tokenization
+```
+
 ---
 
 ## 🐛 Known Issues & Fixes

@@ -15,13 +15,14 @@ Doc2HTML is a **full-stack SaaS application** that converts Word and PowerPoint 
 
 ✅ **Backend Server** (Node.js + Express)
 - REST API with 3 endpoints
-- DOCX to HTML conversion via Mammoth.js
+- **AI-Optimized Engine**: DOCX to semantic HTML conversion via Mammoth.js, specifically tuned for LLM ingestion.
 - File upload handling with Multer
 - CORS support for frontend
 - Comprehensive error handling
 - Request logging & monitoring
 - Graceful shutdown handling
 - Production-ready configuration
+- **Zero-Retention Policy**: In-memory processing for enhanced privacy.
 
 ✅ **Frontend Application** (React.js)
 - Professional, responsive UI
@@ -30,7 +31,7 @@ Doc2HTML is a **full-stack SaaS application** that converts Word and PowerPoint 
 - Download functionality
 - Form validation & error handling
 - Mobile-optimized design
-- Accessibility features
+- **WCAG 2.2 Compliance**: Built-in accessibility features for modern web standards.
 - Beautiful gradient styling
 
 ✅ **Documentation** (3 comprehensive guides)

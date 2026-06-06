@@ -210,7 +210,13 @@ npm start
 
 ---
 
-## 📦 Deployment
+## 📦 Deployment (2025 Strategy)
+
+### Modern Infrastructure Trends
+For 2025, we recommend considering **Edge Computing** and **Serverless** deployments to minimize latency and improve global scalability.
+
+-   **Edge Functions**: Deploy conversion logic to the edge (e.g., Vercel Edge Functions or Cloudflare Workers) to process files closer to the user.
+-   **Global CDN**: Ensure your frontend is served via a global CDN for lightning-fast load times across the world.
 
 ### Deploy Backend (Railway)
 ```bash

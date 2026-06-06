@@ -1,6 +1,6 @@
-# 🚀 Doc2HTML SaaS - Complete Setup Guide
+# 🚀 Doc2HTML SaaS - 2025 AI-Ready Setup Guide
 
-## Quick Start (This Weekend!)
+## Quick Start (Privacy-First & RAG-Optimized!)
 
 ### Prerequisites
 - Node.js (v16+) - Download from nodejs.org

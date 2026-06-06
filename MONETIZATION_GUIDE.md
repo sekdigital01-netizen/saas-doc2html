@@ -14,11 +14,23 @@ Your friends with PDF converters and video downloaders use these exact tactics:
 - Unlimited conversions
 - Remove watermarks/branding
 - Download files
+- **AI Suite**: One-click summarization and translation of converted HTML
 - API access (for power users)
+
+### 3. **Enterprise Tier (Usage-Based)**
+- High-volume API throughput
+- Dedicated LLM endpoint for custom RAG pipelines
+- White-labeling for corporate portals
+- Priority support and SLA
 
 ---
 
-## REVENUE MODEL (How Money Comes In)
+## REVENUE MODEL (2025 Hybrid Approach)
+
+Modern SaaS thrives on a mix of subscription and usage-based billing.
+
+- **Subscriptions**: $4.99/mo for Pro features provides steady MRR.
+- **Usage-Based Add-ons**: Charge $0.05 per AI-summarized document or $1.00 per 1,000 API requests beyond the tier limit.
 
 ### Month 1: Testing
 - 20-50 users
