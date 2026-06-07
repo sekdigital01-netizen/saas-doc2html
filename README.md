@@ -1,327 +1,75 @@
-# 📦 Doc2HTML SaaS - Your Complete Package
+# 📄 Doc2HTML SaaS: AI-Ready Document Conversion
 
-## What You Have (Everything to Start This Weekend!)
+## 🚀 The Bridge Between Your Docs and the AI Era
 
-### 📊 Visual Guide
-- **Doc2HTML_SaaS_Build_Guide.pptx** ← Open this first!
-  - 12 beautiful slides explaining everything
-  - Business model, tech stack, timeline
-  - Monetization strategies
-  - **Open and present to yourself 10 mins** ⏱️
+Doc2HTML is a privacy-first, developer-focused SaaS platform designed to convert legacy documents (**DOCX**, **PPTX**) into high-quality, **AI-optimized HTML**. Whether you're building a RAG (Retrieval-Augmented Generation) pipeline, an AI agent, or a modern web portal, Doc2HTML provides the semantic structure your LLMs crave.
 
-### 💻 Code Files (Copy-paste ready)
-1. **backend_server.js** - Your Node.js server
-   - Express + Mammoth.js conversion
-   - 3 API endpoints
-   - Ready to run locally
-
-2. **Doc2HTML.jsx** - Your React component
-   - File upload form
-   - HTML preview
-   - Download button
-   - Beautiful UI
-
-3. **Doc2HTML.css** - Professional styling
-   - Modern purple gradient theme
-   - Responsive design
-   - Mobile friendly
-
-4. **package_backend.json** - Dependencies list
-   - Copy to `package.json` in backend folder
-   - Run `npm install`
-
-### 📚 Guides
-1. **SETUP_GUIDE.md** - Step-by-step instructions
-   - Backend setup (30 mins)
-   - Frontend setup (1 hour)
-   - Deployment (Vercel + Railway, free!)
-   - Troubleshooting
-
-2. **MONETIZATION_GUIDE.md** - Make money $$$ 
-   - Pricing strategy ($4.99/month)
-   - Marketing playbook
-   - Revenue projections
-   - B2B sales tips
+### 🌟 Why Doc2HTML?
+- **AI-Native Output**: Generates clean, semantic HTML5 (using `<article>`, `<section>`, etc.) that significantly improves LLM parsing and RAG accuracy.
+- **Zero-Retention Privacy**: Files are processed in-memory. We never store your sensitive data, making it ideal for legal and financial use cases.
+- **Edge-Ready**: Optimized for deployment on Vercel Edge or Cloudflare Workers for ultra-low latency.
+- **Accessible by Design**: Complies with WCAG 2.2 standards, ensuring your content is inclusive and SEO-friendly.
 
 ---
 
-## 🚀 Your Weekend Schedule
-
-### Friday Evening (2 hours)
-```
-GOAL: Backend working locally
-
-1. Create folder: mkdir doc2html-backend
-2. Copy backend_server.js into folder
-3. Copy package_backend.json → package.json
-4. Run: npm install
-5. Run: npm start
-6. Test: Go to http://localhost:5000/health
-
-✅ Backend Done - You should see "Server is running"
-```
-
-### Saturday Morning (2 hours)
-```
-GOAL: Frontend displaying and converting
-
-1. Create React app: npx create-react-app doc2html-frontend
-2. Copy Doc2HTML.jsx → src/App.js
-3. Copy Doc2HTML.css → src/App.css
-4. Create .env file with: REACT_APP_API_URL=http://localhost:5000
-5. Run: npm start
-
-✅ Frontend Running - Opens http://localhost:3000
-```
-
-### Saturday Afternoon (2 hours)
-```
-GOAL: Full end-to-end working
-
-1. Create test.docx (open Word, type "Hello World", save)
-2. Go to http://localhost:3000
-3. Upload test.docx
-4. Click "Convert to HTML"
-5. See preview
-6. Test download button
-
-✅ WORKING PRODUCT! You're done with core feature
-```
-
-### Sunday Morning (1 hour)
-```
-GOAL: Deploy live to internet
-
-Backend (Railway):
-1. Push code to GitHub
-2. Go to railway.app
-3. Connect GitHub repo
-4. Gets a public URL like: https://doc2html-xyz.railway.app
-
-Frontend (Vercel):
-1. Push code to GitHub
-2. Go to vercel.com
-3. Connect GitHub repo
-4. Add env var: REACT_APP_API_URL=[YOUR_RAILWAY_URL]
-5. Gets a public URL like: https://doc2html-frontend.vercel.app
-
-✅ LIVE ON INTERNET - Share with friends!
-```
-
-### Sunday Afternoon (1 hour)
-```
-GOAL: Start making money
-
-1. Add Stripe to backend:
-   npm install stripe
-2. Add payment button to frontend
-3. Set pricing: $4.99/month
-4. Post on Product Hunt & Twitter
-5. Share link with friends
-
-✅ FIRST CUSTOMERS - Monitor your dashboard
-```
+## 🛠️ Tech Stack (The Modern Way)
+- **Backend**: Node.js, Express, Mammoth.js, @jvmr/pptx-to-html.
+- **Frontend**: React 18, Tailwind CSS (coming soon), Axios.
+- **Infrastructure**: Vercel (Frontend), Railway (Backend), Edge-compatible.
 
 ---
 
-## 📋 Checklist (Print This Out!)
+## 🚦 Quick Start (Local Development)
 
-### Code & Testing
-- [ ] Backend runs on localhost:5000
-- [ ] Frontend runs on localhost:3000
-- [ ] Can upload .docx file
-- [ ] Sees HTML preview
-- [ ] Download button works (if Pro tier added)
-
-### Deployment
-- [ ] Backend deployed to Railway
-- [ ] Frontend deployed to Vercel
-- [ ] .env has correct API URL
-- [ ] Both work together online
-
-### Marketing
-- [ ] Posted on Product Hunt
-- [ ] Posted on Twitter
-- [ ] Posted on dev.to
-- [ ] Shared with 5 programmer friends
-- [ ] Got 10+ users
-
-### Money
-- [ ] Stripe account created
-- [ ] Payment button in UI
-- [ ] First $5 received ✨
-
----
-
-## 🎯 Key Files to Keep (Don't Delete!)
-
-### Backend Folder Structure
+### 1. Backend Setup
+```bash
+cd backend
+npm install
+npm start
 ```
-doc2html-backend/
-├── backend_server.js       ← Your main file
-├── package.json            ← Copy of package_backend.json
-├── uploads/                ← Temporary upload storage
-└── node_modules/           ← Auto created by npm
+*Server runs on http://localhost:5000. Check http://localhost:5000/health for status.*
+
+### 2. Frontend Setup
+```bash
+cd frontend
+npm install
+npm start
 ```
-
-### Frontend Folder Structure
-```
-doc2html-frontend/
-├── public/
-├── src/
-│   ├── App.js              ← Copy of Doc2HTML.jsx
-│   ├── App.css             ← Copy of Doc2HTML.css
-│   └── index.js
-├── package.json
-├── .env                    ← Your API URL
-└── node_modules/           ← Auto created by npm
-```
+*App opens on http://localhost:3000.*
 
 ---
 
-## 🤔 Quick Reference: Common Issues
-
-### "Can't connect to backend"
-→ Make sure backend is running: `npm start` in backend folder
-
-### "CORS error"
-→ Backend has CORS enabled, check API URL in .env file
-
-### "File upload fails"
-→ Make sure backend `uploads/` folder exists
-
-### "Not seeing changes after deploy"
-→ Push code to GitHub first, then redeploy on Vercel
-
----
-
-## 💰 Revenue Projections (Your Potential)
-
-| Timeline | Users | Paying | Revenue |
-|----------|-------|--------|---------|
-| Week 1 | 10-20 | 1 | $5 |
-| Month 1 | 50-100 | 2-3 | $10-15 |
-| Month 2 | 200-300 | 10-15 | $50-75 |
-| Month 3 | 500-1000 | 30-50 | $150-250 |
-| Month 6 | 2000+ | 100+ | $500+ |
-
-**Your goal for this weekend: 10-20 users by Sunday night**
-
----
-
-## 📞 Need Help? Read These in Order:
-
-1. **SETUP_GUIDE.md** - For installation questions
-2. **MONETIZATION_GUIDE.md** - For pricing/business questions
-3. Stack Overflow - For code errors
-4. Mammoth.js GitHub - For conversion issues
-5. React docs - For frontend issues
-
----
-
-## 🎓 What You're Learning
-
-By building this, you learn:
-✅ Full-stack development (backend + frontend)
-✅ File processing (converting binary formats)
-✅ SaaS business model (freemium pricing)
-✅ Deployment (Railway, Vercel)
-✅ React state management
-✅ Express API design
-✅ Monetization strategy
-
-**This is knowledge worth $10,000+ in courses!**
+## 📊 Business & Growth Guide
+- **MONETIZATION_GUIDE.md**: Learn about our hybrid pricing, AI credits, and $2,000/mo roadmap.
+- **PROJECT_SUMMARY.md**: Full technical breakdown and architecture.
+- **DEPLOYMENT_GUIDE.md**: Go live on Railway and Vercel in < 5 minutes.
 
 ---
 
 ## 🏁 Your Win Conditions
 
 ✨ **By Sunday Night:**
-- [ ] Working product at your own URL
-- [ ] At least 10 friends tried it
-- [ ] Got positive feedback
-- [ ] 1st paying customer (or on track)
+- [ ] Working product at your own URL.
+- [ ] AI-ready HTML output for your first 10 users.
+- [ ] Automated deployment pipeline.
 
-🎉 **By End of Month:**
-- [ ] 500+ users
-- [ ] 20+ paying customers
-- [ ] $100+/month revenue
-- [ ] Passive income stream started
+🎉 **Next Level: AI Integration**
+- Add **Summarization API** to your conversion flow.
+- Enable **Semantic Tagging** for RAG developers.
+- Deploy an **OpenAI Action** to let GPTs read your docs via API.
 
 ---
 
-## ⚡ Pro Tips
-
-1. **Don't Overthink**
-   - MVP = file upload + HTML preview
-   - Payment can come later
-   - Polish comes after users
-
-2. **Ship Fast**
-   - Done > Perfect
-   - Users teach you what to build next
-   - Iterate based on feedback
-
-3. **Market Early**
-   - Tell people while building
-   - Get first users on day 3, not week 3
-   - Momentum = more users
-
-4. **Monetize Confidently**
-   - $4.99/month is fair price
-   - People will pay for convenience
-   - You create value = you deserve payment
-
-5. **Stay Focused**
-   - Don't add PPTX, PDF, 10 features at once
-   - Get DOCX perfect first
-   - Add features based on user requests
+## 🎓 Documentation Index
+1. **SETUP_GUIDE.md**: Step-by-step installation.
+2. **TESTING_GUIDE.md**: How to verify AI-readiness and semantic correctness.
+3. **START_APP.md**: One-page cheat sheet for daily development.
 
 ---
 
-## 🎬 Next Level: After This Weekend
+## ⚡ Pro Tips for 2025
+1. **Focus on RAG**: Document parsing is the #1 bottleneck for AI startups. Position yourself as the solution.
+2. **Privacy Sells**: Mention "Zero-Retention" in every sales pitch.
+3. **Iterate Fast**: Use the provided test suites to ensure your AI-Ready HTML never breaks.
 
-**Week 2-3:** 
-- Add PPTX support
-- Add user accounts
-- Add Stripe payments
-
-**Month 2:**
-- Email marketing (mailchimp)
-- API endpoint for developers
-- White-label for agencies
-
-**Month 3:**
-- Direct B2B sales ($500-2000/deal)
-- Integration with other tools
-- Mobile app
-
----
-
-## 🚀 Final Words
-
-**You have everything you need.**
-
-The code is written. The guide is clear. The business model works.
-
-Your friends built PDF converters - that's harder!
-Your idea (doc to HTML) is simpler and better positioned.
-
-Only thing left: **Build it this weekend.**
-
-Friday evening to Sunday lunch = your SaaS is live.
-
-Then you get to tell people:
-> "Yeah, I built a SaaS that makes $500/month. Made it in a weekend."
-
-That's a great story. 📖
-
----
-
-**Let's go! Build this! 🚀**
-
-Questions? Refer back to the guides.
-Stuck? Google the error.
-Inspired? Share your progress on Twitter.
-
-See you on the other side with a working product! 💰
+**Built for the future. Scalable for today. 🚀**
