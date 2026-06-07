@@ -471,6 +471,12 @@ body {
   font-weight: 600;
 }
 
+.slide-separator {
+  margin: var(--spacing-xl) 0;
+  border: 0;
+  border-top: 2px dashed var(--border);
+}
+
 /* Empty State */
 .empty-state {
   background: white;

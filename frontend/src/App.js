@@ -147,7 +147,12 @@ export default function Doc2HTML() {
 
       // Check if conversion was successful
       if (response.data.success && response.data.html) {
-        setHtmlContent(response.data.html);
+        // Handle PPTX array response
+        const processedHtml = Array.isArray(response.data.html)
+          ? response.data.html.join('<hr class="slide-separator" />')
+          : response.data.html;
+
+        setHtmlContent(processedHtml);
         setConversionStats({
           fileName: response.data.fileName,
           warnings: response.data.warnings?.length || 0
@@ -265,7 +270,7 @@ export default function Doc2HTML() {
 
             {/* File Info */}
             <div className="file-info">
-              <strong>Supported formats:</strong> .docx, .doc, .pptx (coming soon)
+              <strong>Supported formats:</strong> .docx, .doc, .pptx
               <br />
               <strong>Max size:</strong> 10MB
               <br />
